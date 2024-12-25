@@ -7,7 +7,7 @@
 <p align="right">Группа: ПИ-б-о-241(1)</p>
 <p align="right">Преподаватель: Чабанов Владимир Викторович</p>
 
-## ⚡️Используемы технологии:
+## ⚡️Используемые технологии:
 [<img src="https://img.shields.io/badge/telegram-26A5E4?style=for-the-badge&logo=Telegram&logoColor=ffffff"/>](https://t.me/testingalexx_bot)
 ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
 ![Nginx](https://img.shields.io/badge/nginx-%23009639.svg?style=for-the-badge&logo=nginx&logoColor=white)
