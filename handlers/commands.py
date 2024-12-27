@@ -5,7 +5,8 @@ from .keyboards import get_main_keyboard
 #/start
 async def start_command(message: types.Message):
     await message.answer(
-        "Привет! Я - бот приложения для тестирования. С помощью меня ты можешь ..."
+        "Привет! Я - бот приложения для тестирования. С помощью меня ты можешь ...",
+        reply_markup=get_main_keyboard()
     )
 
 #/login
