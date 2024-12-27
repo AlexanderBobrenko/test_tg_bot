@@ -26,11 +26,11 @@ async def help_command(message: types.Message):
     await message.answer(help_text, parse_mode="HTML")
 
 #button "Авторизация"
-async def auth_command(message: types.Message):
+async def auth_button(message: types.Message):
     await message.answer("Функция авторизации пока не реализована.")
 
 #button "Тесты"
-async def tests_command(message: types.Message):
+async def tests_button(message: types.Message):
     await message.answer("Функция тестов пока не реализована.")
 
 #button "Помощь"
