@@ -19,12 +19,12 @@ async def login_command(message: types.Message):
 async def help_command(message: types.Message):
     help_text = """
 <b><i>Доступные команды:</i></b>
-<br>
+\n
 <i>/start</i> - Начать работу с ботом
 <i>/login</i> - Авторизоваться в боте
-<br>
+\n
 ===========================
-<br>
+\n
 <i>/help</i> - Получить список команд
 """
     await message.answer(help_text, parse_mode="HTML")
