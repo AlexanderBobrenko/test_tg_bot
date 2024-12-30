@@ -1,9 +1,9 @@
 import asyncio
 from aiogram import Bot, Dispatcher, types, F
 from aiogram.filters import Command
-from config import TOKEN
-from handlers.commands import start_command, login_command, help_command, auth_button, tests_button, help_button_command
-from handlers.keyboards import get_main_keyboard
+from .config import TOKEN
+from .handlers.commands import start_command, login_command, help_command, auth_button, tests_button, help_button_command
+from .handlers.keyboards import get_main_keyboard
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
