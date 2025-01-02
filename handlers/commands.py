@@ -13,7 +13,8 @@ async def start_command(message: types.Message):
     if not status:
         set_user_status(chat_id, 'Неизвестный')
     await message.answer(
-        "Привет! Я - бот приложения для тестирования. С помощью меня ты можешь ...",
+        "Добро пожаловать! Я — ваш помощник в приложении для тестирования. "
+        "С моей помощью вы можете проходить тесты и отслеживать свои результаты.",
         reply_markup=get_main_keyboard()
     )
 
@@ -30,13 +31,13 @@ async def login_command(message: types.Message):
         print(f"Authorization response: {response}")  # Отладочный вывод
         if response["status"] == "success":
             set_user_status(chat_id, "Авторизованный")
-            await message.answer("Вы успешно авторизовались!")
+            await message.answer("🎉 Вы успешно авторизовались! Теперь вам доступны все функции.")
         else:
-            await message.answer("Ошибка авторизации.")
+            await message.answer("❌ Ошибка авторизации. Пожалуйста, попробуйте снова.")
     elif status == 'Анонимный':
-        await message.answer("Вы уже начали процесс авторизации.")
+        await message.answer("🔑 Вы уже начали процесс авторизации. Пожалуйста, завершите его.")
     elif status == 'Авторизованный':
-        await message.answer("Вы уже авторизованы.")
+        await message.answer("✅ Вы уже авторизованы. Нет необходимости входить снова.")
 
 #/logout
 async def logout_command(message: types.Message):
@@ -48,9 +49,9 @@ async def logout_command(message: types.Message):
         print(f"Logout response: {response}")  # Отладочный вывод
         if response["status"] == "success":
             delete_user_session(chat_id)
-            await message.answer("Вы успешно вышли из системы.")
+            await message.answer("👋 Вы успешно вышли из системы. До новых встреч!")
     else:
-        await message.answer("Вы не авторизованы.")
+        await message.answer("⚠️ Вы не авторизованы. Войдите в систему, чтобы продолжить.")
 
 #/help
 async def help_command(message: types.Message):
@@ -72,9 +73,9 @@ async def auth_button(message: types.Message):
     if status == 'Неизвестный':
         await login_command(message)
     elif status == 'Анонимный':
-        await message.answer("Вы уже начали процесс авторизации.")
+        await message.answer("🔑 Вы уже начали процесс авторизации. Пожалуйста, завершите его.")
     elif status == 'Авторизованный':
-        await message.answer("Вы уже авторизованы.")
+        await message.answer("✅ Вы уже авторизованы. Нет необходимости входить снова.")
 
 #button "Тесты"
 async def tests_button(message: types.Message):
@@ -82,9 +83,10 @@ async def tests_button(message: types.Message):
     status = get_user_status(chat_id)
     print(f"tests_button called with status: {status}")  # Отладочный вывод
     if status == 'Авторизованный':
-        await message.answer("Функция тестов пока не реализована.")
+        await message.answer("📚 Функция тестов пока не реализована.")
     else:
-        await message.answer("Для доступа к тестам необходимо авторизоваться.")
+        await message.answer("🔒 Для доступа к тестам необходимо авторизоваться. Используйте команду /login.")
+
 #button "Помощь"
 async def help_button_command(message: types.Message):
     await help_command(message)
