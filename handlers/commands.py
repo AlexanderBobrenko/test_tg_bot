@@ -31,7 +31,11 @@ async def login_command(message: types.Message):
         print(f"Authorization response: {response}")  # Отладочный вывод
         if response["status"] == "success":
             set_user_status(chat_id, "Авторизованный")
-            await message.answer("🎉 Вы успешно авторизовались! Теперь вам доступны все функции.")
+            print(f"User {chat_id} status updated to: Авторизованный")  # Отладочный вывод
+            await message.answer(
+                "🎉 Вы успешно авторизовались! Теперь вам доступны все функции.",
+                reply_markup=get_main_keyboard(is_authorized=True)
+            )
         else:
             await message.answer("❌ Ошибка авторизации. Пожалуйста, попробуйте снова.")
     elif status == 'Анонимный':
@@ -49,7 +53,11 @@ async def logout_command(message: types.Message):
         print(f"Logout response: {response}")  # Отладочный вывод
         if response["status"] == "success":
             delete_user_session(chat_id)
-            await message.answer("👋 Вы успешно вышли из системы. До новых встреч!")
+            print(f"User {chat_id} session deleted. New status: {get_user_status(chat_id)}")  # Отладочный вывод
+            await message.answer(
+                "👋 Вы успешно вышли из системы.",
+                reply_markup=get_main_keyboard(is_authorized=False)
+            )
     else:
         await message.answer("⚠️ Вы не авторизованы. Войдите в систему, чтобы продолжить.")
 
