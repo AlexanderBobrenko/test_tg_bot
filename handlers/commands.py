@@ -27,6 +27,7 @@ async def login_command(message: types.Message):
         login_token = str(uuid.uuid4())
         set_user_token(chat_id, login_token)
         response = authorize_user(login_token)
+        print(f"Authorization response: {response}")  # Отладочный вывод
         if response["status"] == "success":
             set_user_status(chat_id, "Авторизованный")
             await message.answer("Вы успешно авторизовались!")
@@ -41,8 +42,10 @@ async def login_command(message: types.Message):
 async def logout_command(message: types.Message):
     chat_id = message.chat.id
     refresh_token = get_user_token(chat_id)
+    print(f"/logout called with token: {refresh_token}")  # Отладочный вывод
     if refresh_token:
         response = logout(refresh_token)
+        print(f"Logout response: {response}")  # Отладочный вывод
         if response["status"] == "success":
             delete_user_session(chat_id)
             await message.answer("Вы успешно вышли из системы.")
@@ -65,6 +68,7 @@ async def help_command(message: types.Message):
 async def auth_button(message: types.Message):
     chat_id = message.chat.id
     status = get_user_status(chat_id)
+    print(f"auth_button called with status: {status}")  # Отладочный вывод
     if status == 'Неизвестный':
         await login_command(message)
     elif status == 'Анонимный':
@@ -76,6 +80,7 @@ async def auth_button(message: types.Message):
 async def tests_button(message: types.Message):
     chat_id = message.chat.id
     status = get_user_status(chat_id)
+    print(f"tests_button called with status: {status}")  # Отладочный вывод
     if status == 'Авторизованный':
         await message.answer("Функция тестов пока не реализована.")
     else:
