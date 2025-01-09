@@ -2,6 +2,7 @@ from aiogram import types
 from aiogram.filters import Command
 from .keyboards import get_main_keyboard
 from ..mocks.auth_mock import check_token, logout, authorize_user
+from ..mocks.main_module_mock import get_tests, get_test_details, get_test_questions, create_attempt, submit_answer, get_attempt_results
 from ..services.redis_service import set_user_status, get_user_status, set_user_token, delete_user_session, get_user_token
 import uuid
 
@@ -60,6 +61,99 @@ async def logout_command(message: types.Message):
             )
     else:
         await message.answer("⚠️ Вы не авторизованы. Войдите в систему, чтобы продолжить.")
+
+#/show_tests
+async def list_tests(message: types.Message):
+    tests = get_tests()
+    if not tests:
+        await message.answer("Тесты не найдены.")
+        return
+
+    response = "📚 Доступные тесты:\n"
+    for test in tests:
+        response += f"{test['id']}. {test['name']} — {test['description']}\n"
+
+    await message.answer(response)
+
+#/test_details
+async def test_details_command(message: types.Message):
+    text = message.text.split()
+    print(f"/test_details called with args: {text}")  # Отладочный вывод
+    if len(text) < 2:
+        await message.answer("Пожалуйста, укажите ID теста.")
+        return
+    
+    test_id = int(text[1])
+    test = get_test_details(test_id)
+    print(f"Test details: {test}")  # Отладочный вывод
+    
+    if test:
+        response = f"Название: {test['name']}\nОписание: {test['description']}"
+    else:
+        response = "Тест не найден."
+    
+    await message.answer(response)
+
+#/create_attempt
+async def create_attempt_command(message: types.Message):
+    text = message.text.split()
+    print(f"/create_attempt called with args: {text}")  # Отладочный вывод
+    if len(text) < 2:
+        await message.answer("Пожалуйста, укажите ID теста.")
+        return
+    
+    test_id = int(text[1])
+    user_id = message.from_user.id
+    attempt = create_attempt(test_id, user_id)
+    print(f"Attempt: {attempt}")  # Отладочный вывод
+    
+    if attempt:
+        response = f"Попытка теста '{test_id}' создана. ID попытки: {attempt['id']}."
+    else:
+        response = "Ошибка создания попытки."
+    
+    await message.answer(response)
+
+#/submit_answer
+async def submit_answer_command(message: types.Message):
+    text = message.text.split()
+    if len(text) != 4:
+        await message.answer("Используйте: /submit_answer <ID попытки> <ID вопроса> <номер ответа>")
+        return
+    
+    attempt_id, question_id, answer = map(int, text[1:])
+    result = submit_answer(attempt_id, question_id, answer)
+    
+    if result["status"] == "success":
+        response = "Ответ принят."
+    else:
+        response = result["message"]
+    
+    await message.answer(response)
+
+#/get_results
+async def get_results_command(message: types.Message):
+    text = message.text.split()
+    if len(text) < 2:
+        await message.answer("Пожалуйста, укажите ID попытки.")
+        return
+    
+    attempt_id = int(text[1])
+    results = get_attempt_results(attempt_id)
+    
+    if results["status"] == "success":
+        response = f"Результаты попытки {attempt_id}:\n"
+        for result in results["results"]:
+            response += (f"Вопрос: {result['question_text']}\n"
+                         f"Ваш ответ: {result['user_answer']}\n"
+                         f"Правильный ответ: {result['correct_answer']}\n"
+                         f"Правильно: {'Да' if result['is_correct'] else 'Нет'}\n\n")
+        response += (f"Всего правильных ответов: {results['total_correct']}\n"
+                     f"Всего вопросов: {results['total_questions']}\n")
+    else:
+        response = results["message"]
+    
+    await message.answer(response)
 
 #/help
 async def help_command(message: types.Message):
